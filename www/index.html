@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript" src="js/index.js?ver=1"></script>
+	<link rel="stylesheet" type="text/css" href="css/index.css?ver=1"/>
+</head>
+<body>
+	<div class="header">
+		<div class="logo"></div>
+		<div class="caption">SopovRobotics - model v201703 (Infrared eye)</div>
+		<div class="autocontrol-programming">Auto-Control programming</div>
+	</div>
+	<div class="content">
+		<div class="tbl connectionform">
+			<div class="tbl-row">
+				<div class="tbl-cell">
+					<input id="address_ws" value="ws://localhost:7528/"/><button id="connect">Connect</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="tbl controlpanel">
+			<div class="tbl-row">
+				<div class="tbl-cell p50">
+					<h1>Hands Control</h1>
+					<div class="hands-control"></div>
+					<br><br><br>
+					For control please use:<br>
+					<img src="images/cursorkeys.png">
+				</div>
+				<div class="tbl-cell p50">
+					<h1>Script-Control</h1>
+					<div id="roboscript">
+						<textarea></textarea>
+					</div>
+					
+					<button id="run">Run</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="tbl autocontrolpanel">
+			
+		</div>
+		
+	</div>
+	<div class="footer">
+		Copyright © 2017 SopovRobotics 
+	</div>
+</body>
+</html>
