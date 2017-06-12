@@ -89,7 +89,7 @@ button{
 	display: none;
 }
 
-#roboscript textarea{
+#roboscript textarea, #autocontrolscript textarea{
 	text-align: left;
 	width: 80%;
 	height: 400px;
@@ -141,6 +141,6 @@ button{
 	transform: rotate(90deg);
 }
 
-#roboscript{
+#roboscript, #autocontrolscript{
 	padding-bottom: 30px;
 }
