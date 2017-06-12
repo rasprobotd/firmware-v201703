@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = rasprobotd
+TARGET = sopovrobotics
 
 QT += core network websockets
 QT -= gui

@@ -11,13 +11,11 @@
 
 // ---------------------------------------------------------------------
 
-WebSocketServer::WebSocketServer(quint16 port, bool debug, QObject *parent) : QObject(parent) {
-	m_pWebSocketServer = new QWebSocketServer(QStringLiteral("Rasp Robot Daemon"), QWebSocketServer::NonSecureMode, this);
-	m_debug = debug;
+WebSocketServer::WebSocketServer(QObject *parent) : QObject(parent) {
+	m_pWebSocketServer = new QWebSocketServer(QStringLiteral("SopovRobotics"), QWebSocketServer::NonSecureMode, this);
 
-    if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
-        if (m_debug)
-            qDebug() << "Rasp Robot Daemon listening on port" << port;
+    if (m_pWebSocketServer->listen(QHostAddress::Any, 7528)) {
+		qDebug() << "SopovRobotics listening on port 7528";
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &WebSocketServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WebSocketServer::closed);
         create_cmd_handlers(m_mapCmdHandlers);
@@ -57,8 +55,7 @@ void WebSocketServer::onNewConnection()
 {
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 	
-	if (m_debug)
-        qDebug() << "NewConnection " << pSocket->peerAddress().toString() << " " << pSocket->peerPort();
+	qDebug() << "NewConnection " << pSocket->peerAddress().toString() << " " << pSocket->peerPort();
         
     connect(pSocket, &QWebSocket::textMessageReceived, this, &WebSocketServer::processTextMessage);
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &WebSocketServer::processBinaryMessage);
@@ -69,7 +66,7 @@ void WebSocketServer::onNewConnection()
     QJsonObject obj;
     obj["msg"] = "info";
 	obj["version"] = "v201703";
-	obj["firmware"] = 1;
+	obj["firmware"] = 2;
 	obj["name"] = "Infrared eye";
 	// TODO 
 
@@ -81,7 +78,7 @@ void WebSocketServer::onNewConnection()
 	capabilities["autocontrol"] = true;
 	capabilities["light"] = false;
 	obj["capabilities"] = capabilities;
-	
+
 	this->sendMessage(pSocket, obj);
 }
 
@@ -99,10 +96,10 @@ void WebSocketServer::processTextMessage(QString message) {
 		obj["error"] = "Invalid command format";
 		this->sendMessage(pClient, obj);
 	}
-    if (m_debug){
-		if(cmd != "takevideo0")
-			qDebug() << QDateTime::currentDateTimeUtc().toString() << " [WS] <<< " << message;
-	}
+    
+	if(cmd != "takevideo0")
+		qDebug() << QDateTime::currentDateTimeUtc().toString() << " [WS] <<< " << message;
+	
 
 	if(m_mapCmdHandlers.contains(cmd)){
 		m_mapCmdHandlers[cmd]->handle(pClient, this, jsonData);
@@ -118,19 +115,17 @@ void WebSocketServer::processTextMessage(QString message) {
 
 void WebSocketServer::processBinaryMessage(QByteArray message) {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if (m_debug)
-        qDebug() << "Binary Message received:" << message;
-    if (pClient) {
+    // send comeback
+    /*if (pClient) {
         pClient->sendBinaryMessage(message);
-    }
+    }*/
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::socketDisconnected() {
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if (m_debug)
-        qDebug() << "socketDisconnected:" << pClient;
+	qDebug() << "socketDisconnected:" << pClient;
     if (pClient) {
         m_clients.removeAll(pClient);
         pClient->deleteLater();

@@ -17,7 +17,7 @@ class WebSocketServer : public QObject, public IWebSocketServer {
 	private:
 		Q_OBJECT
 	public:
-		explicit WebSocketServer(quint16 port, bool debug = false, QObject *parent = Q_NULLPTR);
+		explicit WebSocketServer(QObject *parent = Q_NULLPTR);
 		~WebSocketServer();
 
 		virtual void sendMessage(QWebSocket *pClient, QJsonObject obj);
@@ -46,7 +46,6 @@ class WebSocketServer : public QObject, public IWebSocketServer {
 		QWebSocketServer *m_pWebSocketServer;
 		QList<QWebSocket *> m_clients;
 		QMap<QString, ICmdHandler *> m_mapCmdHandlers;
-		bool m_debug;
 		int mPinA1;
 		int mPinA2;
 		int mPinB1;

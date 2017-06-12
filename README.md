@@ -20,3 +20,4 @@ This server based on Qt5 + QWebSocket Server
         $ sudo update-rc.d -f sopovrobotics remove
         $ sudo update-rc.d sopovrobotics defaults
 
+## Websocket will be opened on port 7528

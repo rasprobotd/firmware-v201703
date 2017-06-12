@@ -28,6 +28,6 @@
 *.out
 *.app
 
-rasprobotd
+sopovrobotics
 tmp/*
 Makefile
