@@ -1,9 +1,6 @@
-# v201703
-Firmware for v201703
+# SopovRobotics firmware for v201703 (Infrared eye)
 
-# Rasp Robot Deamon
-
-This app writed on Qt5 use QWebSocket
+This server based on Qt5 + QWebSocket Server
 
 ## Requirements
 
@@ -16,10 +13,10 @@ This app writed on Qt5 use QWebSocket
 
 ## Configure
 
-        $ sudo ln -s `pwd`/etc/rasprobotd /etc/rasprobotd
-        $ sudo ln -s `pwd`/etc/init.d/rasprobotd /etc/init.d/rasprobotd
-        $ sudo ln -s `pwd`/rasprobotd /usr/bin/rasprobotd
-        $ sudo nano /etc/rasprobotd/conf.ini
-        $ sudo update-rc.d -f rasprobotd remove
-        $ sudo update-rc.d rasprobotd defaults
+        $ sudo ln -s `pwd`/etc/sopovrobotics /etc/rasprobotd
+        $ sudo ln -s `pwd`/etc/init.d/sopovrobotics /etc/init.d/sopovrobotics
+        $ sudo ln -s `pwd`/sopovrobotics /usr/bin/sopovrobotics
+        $ sudo nano /etc/sopovrobotics/conf.ini
+        $ sudo update-rc.d -f sopovrobotics remove
+        $ sudo update-rc.d sopovrobotics defaults
 
