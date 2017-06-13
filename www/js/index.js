@@ -178,9 +178,59 @@ if(window.localStorage.getItem('autocontrolscript') == null){
 	)
 }
 
+
+function tryConnect(url){
+	var d = $.Deferred();
+	var bClose = false;
+	try{
+		var s = new WebSocket(url);
+		s.onopen = function() {
+			console.warn("Opened: " + url);
+		};
+		
+		s.onclose = function(event) {
+			if (event.wasClean) {
+				console.log('Disconnected');
+			} else {
+				console.log('Connection refused');
+				if(!bClose){
+					d.reject();
+				}
+			}
+		}
+
+		s.onmessage = function(event) {
+			if(event.data instanceof Blob){
+				// nothing
+			}else{
+				try{
+					var data = JSON.parse(event.data);
+					if(data['msg'] == 'info'){
+						data.url = url;
+						d.resolve(data);
+					}else{
+						d.reject();
+					}
+					bClose = true;
+					s.close();
+				}catch(e){
+					d.reject();
+					s.close();
+				}
+			}
+		};
+		s.onerror = function(error) {
+			console.log("Error " + error.message);
+		};
+	}catch(e){
+		d.reject();
+	}
+	return d;
+}
+
 $(document).ready(function(){
 	$('#connect').click(function(){
-		$('.connectionform').hide();
+		$('.connectionform').removeClass('show');
 		window.socket = new WebSocket($('#address_ws').val());
 		window.socket.onopen = function() {
 			$('.controlpanel').css({'display': 'table'});
@@ -188,8 +238,8 @@ $(document).ready(function(){
 		};
 
 		window.socket.onclose = function(event) {
-			$('.controlpanel').hide();
-			$('.connectionform').show();
+			$('.controlpanel').removeClass('show');
+			$('.connectionform').addClass('show');
 			
 			if (event.wasClean) {
 				console.log('Disconnected');
@@ -245,10 +295,17 @@ $(document).ready(function(){
 	});
 	
 	$('.autocontrol-programming').unbind().bind('click', function(){
-		$('.connectionform').hide();
-		$('.controlpanel').hide();
-		$('.autocontrolpanel').css({'display': 'table'});
-		simulate_draw();
+		if($('.autocontrolpanel').hasClass('show')){
+			$('.autocontrolpanel').removeClass('show');
+			$('.connectionform').addClass('show');
+			$('.controlpanel').removeClass('show');
+			$('.autocontrol-programming').html('Auto-Control programming');
+		}else{
+			$('.connectionform').removeClass('show');
+			$('.controlpanel').removeClass('show');
+			$('.autocontrolpanel').addClass('show');
+			simulate_draw();
+		}
 	});
 	
 	$('#simulate_start').unbind().bind('click', function(){
@@ -265,11 +322,60 @@ $(document).ready(function(){
 		window.localStorage.setItem('autocontrolscript', $('#autocontrolscript textarea').val());
 	});
 	
-	// for test
-	$('.connectionform').hide();
-	$('.controlpanel').hide();
-	$('.autocontrolpanel').css({'display': 'table'});
-	simulate_draw();
+	
+	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
+    var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};      
+    pc.createDataChannel("");    //create a bogus data channel
+    pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
+    pc.onicecandidate = function(ice){  //listen for candidate events
+        if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+        var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+        $('#address_ws').val("ws://" + myIP + ':7528');
+        pc.onicecandidate = noop;
+    };
+    
+    $('#search').unbind().bind('click', function(){
+		
+		$('#search').hide();
+		$('.searching').addClass('show');
+		
+		var a = $('#address_ws').val().split("/");
+		a = a[2].split(":");
+		var p = a[1];
+		a = a[0];
+		a = a.split(".");
+		
+		$('.found_addresses').html('');
+		function finish(r){
+			if(ready1 == 252){
+				$('#search').show();
+				$('.searching').removeClass('show');
+				$('.address_found').unbind().bind('click',function(){
+					$('#address_ws').val($(this).attr('url'));
+					$('#connect').click();
+				});
+				
+				if($('.found_addresses').html() == ''){
+					$('.found_addresses').html('Not found');
+				}
+			}
+		}
+		var ready1 = 0;
+		for(var i = 2; i < 255; i++){
+			a[3] = i;
+			var check_addr = "ws://" + a.join(".") + ":" + p;
+			// console.log(check_addr);
+			tryConnect(check_addr).done(function(r){
+				console.warn(r);
+				$('.found_addresses').append('<div class="address_found" url="' + r.url + '">' + r.url + ' [model ' + r.version + ' (' + r.name + ')' + ']</div>');
+				ready1++;
+				finish(ready1);
+			}).fail(function(){
+				ready1++;
+				finish(ready1);
+			});
+		}
+	})
 })
 
 function roboscript_started(){

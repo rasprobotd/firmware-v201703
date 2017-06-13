@@ -81,12 +81,28 @@ button{
     padding-top: 70px;
 }
 
+.connectionform{
+	display: none;
+}
+
+.connectionform.show{
+	display: table;
+}
+
 .controlpanel{
 	display: none;
 }
 
+.controlpanel.show{
+	display: table;
+}
+
 .autocontrolpanel{
 	display: none;
+}
+
+.autocontrolpanel.show{
+	display: table;
 }
 
 #roboscript textarea, #autocontrolscript textarea{
@@ -143,4 +159,31 @@ button{
 
 #roboscript, #autocontrolscript{
 	padding-bottom: 30px;
+}
+
+.searching{
+	display: none;
+    width: 100px;
+    height: 80px;
+    background-image: url(../images/spinner.gif);
+    background-position: center center;
+    background-size: 100% 100%;
+}
+
+.searching.show{
+	display: inline-block;
+}
+.found_addresses{
+	display: inline-block;
+}
+
+.address_found{
+	cursor: pointer;
+    color: blue;
+    padding: 10px;
+}
+
+.address_found:hover{
+	text-decoration: underline;
+	background-color: lightgray;
 }
