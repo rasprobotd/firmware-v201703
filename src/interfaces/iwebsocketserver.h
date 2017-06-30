@@ -14,6 +14,10 @@ class IWebSocketServer {
 		virtual void forward() = 0;
 		virtual void backward() = 0;
 		virtual void stop() = 0;
+		virtual void check_lets() = 0;
+		virtual bool let0() = 0;
+		virtual bool let1() = 0;
+		virtual bool let2() = 0;
 };
 
 #endif // INTERFACES_IWEBSOCKETSERVER_H

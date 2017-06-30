@@ -14,19 +14,16 @@
 #include <QFile>
 #include <QString>
 #include "websocketserver.h"
+#include "sett.h"
 
 int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
-	
-	QCoreApplication a(argc, argv);
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription("SopovRobotics");
-    parser.addHelpOption();
-    parser.process(a);
-
-    WebSocketServer *server = new WebSocketServer();
-    QObject::connect(server, &WebSocketServer::closed, &a, &QCoreApplication::quit);
+    WebSocketServer *pServer = new WebSocketServer();
+    if(!pServer->isServerStarted()){
+		return -1;
+	}
     
+    QObject::connect(pServer, &WebSocketServer::closed, &app, &QCoreApplication::quit);
 	return app.exec();
 }

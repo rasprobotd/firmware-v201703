@@ -228,6 +228,28 @@ function tryConnect(url){
 	return d;
 }
 
+function updateLets(data){
+	
+	if(data.let0 == true){
+		$('.let0').addClass('yes');
+	}else{
+		$('.let0').removeClass('yes');
+	}
+	
+	if(data.let1 == true){
+		$('.let1').addClass('yes');
+	}else{
+		$('.let1').removeClass('yes');
+	}
+	
+	if(data.let2 == true){
+		$('.let2').addClass('yes');
+	}else{
+		$('.let2').removeClass('yes');
+	}
+}
+
+
 $(document).ready(function(){
 	$('#connect').click(function(){
 		$('.connectionform').removeClass('show');
@@ -266,8 +288,11 @@ $(document).ready(function(){
 				// $('#webcam').attr({'src' : URL.createObjectURL(event.data)})
 			}else{
 				console.log("Recieved data " + event.data);
+				var response = JSON.parse(event.data);
+				if(response && response.cmd && response.cmd == "check_lets"){
+					updateLets(response);
+				}
 			}
-			
 		};
 
 		window.socket.onerror = function(error) {
@@ -376,6 +401,13 @@ $(document).ready(function(){
 			});
 		}
 	})
+	
+	
+	$('#check_lets').unbind().bind('click', function(){
+		var data = JSON.stringify({'cmd':'check_lets'});
+		console.log("[WS] send " + data);
+		window.socket.send(data);
+	});
 })
 
 function roboscript_started(){

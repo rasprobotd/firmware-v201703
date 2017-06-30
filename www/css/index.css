@@ -187,3 +187,16 @@ button{
 	text-decoration: underline;
 	background-color: lightgray;
 }
+
+.let0, .let1, .let2 {
+	display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: lightgray;
+    border-radius: 20px;
+    margin: 20px;
+}
+
+.let0.yes, .let1.yes, .let2.yes{
+    background-color: red;
+}
