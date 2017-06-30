@@ -246,7 +246,7 @@ void WebSocketServer::check_lets(){
 
 	unexportPin(pin_let_in);
 	unexportPin(pin_let_servo);
-	
+
 }
 
 // ---------------------------------------------------------------------
@@ -270,52 +270,67 @@ bool WebSocketServer::let2(){
 // ---------------------------------------------------------------------
 
 void WebSocketServer::unexportPin(int pin){
-	QFile file("/sys/class/gpio/unexport");
+	QString gpio_path = "/sys/class/gpio/unexport";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(pin) << endl;
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for pin " << pin;
 	}
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::exportPin(int pin){
-	QFile file("/sys/class/gpio/export");
+	QString gpio_path = "/sys/class/gpio/export";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(pin) << endl;
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for pin " << pin;
 	}
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::setPinValue(int pin, int value){
-	QFile file("/sys/class/gpio/gpio" + QString::number(pin) + "/value");
+	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(value) << endl;
 		qDebug() << "Set value " << value << " to " << pin;
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for set value";
 	}
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::directionOutPin(int pin){
-	QFile file("/sys/class/gpio/gpio" + QString::number(pin) + "/direction");
+	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/direction";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << "out" << endl;
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for out";
 	}
 }
 
 // ---------------------------------------------------------------------
 
 int WebSocketServer::getPinValue(int pin){
+	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
 	int value = -1;
-	QFile file("/sys/class/gpio/gpio" + QString::number(pin) + "/value");
+	QFile file(gpio_path);
 	if (file.open(QIODevice::ReadWrite)){
 		QTextStream stream( &file );
 		stream >> value;
+	}else{
+		qDebug() << "Could not open gpio/gpioN/value for get value";
 	}
 	return value;
 }
@@ -323,17 +338,21 @@ int WebSocketServer::getPinValue(int pin){
 // ---------------------------------------------------------------------
 
 void WebSocketServer::directionInPin(int pin){
-	QFile file("/sys/class/gpio/gpio" + QString::number(pin) + "/direction");
+	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/direction";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << "in" << endl;
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for in";
 	}
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::pwmPin(int pin, qint64 width_signal_usec){
-	QFile file("/sys/class/gpio/gpio" + QString::number(pin) + "/value");
+	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
+	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		int counter = 0;
@@ -353,6 +372,8 @@ void WebSocketServer::pwmPin(int pin, qint64 width_signal_usec){
 				return;
 			}
 		}
+	}else{
+		qDebug() << "Could not open " << gpio_path << " for pwm";
 	}
 }
 
