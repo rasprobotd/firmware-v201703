@@ -61,10 +61,6 @@ class WebSocketServer : public QObject, public IWebSocketServer {
 		QWebSocketServer *m_pWebSocketServer;
 		QList<QWebSocket *> m_clients;
 		QMap<QString, ICmdHandler *> m_mapCmdHandlers;
-		int mPinA1;
-		int mPinA2;
-		int mPinB1;
-		int mPinB2;
 		
 		bool m_bLet0;
 		bool m_bLet1;

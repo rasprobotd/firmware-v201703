@@ -153,78 +153,103 @@ void WebSocketServer::sendMessage(QWebSocket *pClient, const QByteArray &data){
 // ---------------------------------------------------------------------
 
 void WebSocketServer::openDriverPins(){
-	mPinA1 = m_pSett->drivers_PIN_A1();
-	mPinA2 = m_pSett->drivers_PIN_A2();
-	mPinB1 = m_pSett->drivers_PIN_B1();
-	mPinB2 = m_pSett->drivers_PIN_B2();
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
 
-	unexportPin(mPinA1);
-	unexportPin(mPinA2);
-	unexportPin(mPinB1);
-	unexportPin(mPinB2);
+	unexportPin(pin_A1);
+	unexportPin(pin_A2);
+	unexportPin(pin_B1);
+	unexportPin(pin_B2);
 
-	exportPin(mPinA1);
-	exportPin(mPinA2);
-	exportPin(mPinB1);
-	exportPin(mPinB2);
+	exportPin(pin_A1);
+	exportPin(pin_A2);
+	exportPin(pin_B1);
+	exportPin(pin_B2);
 
-	directionOutPin(mPinA1);
-	directionOutPin(mPinA2);
-	directionOutPin(mPinB1);
-	directionOutPin(mPinB2);
+	directionOutPin(pin_A1);
+	directionOutPin(pin_A2);
+	directionOutPin(pin_B1);
+	directionOutPin(pin_B2);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::turnleft(){
-
-	setPinValue(mPinA1, 1);
-	setPinValue(mPinA2, 0);
-	setPinValue(mPinB1, 0);
-	setPinValue(mPinB2, 1);
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
+	
+	setPinValue(pin_A1, 1);
+	setPinValue(pin_A2, 0);
+	setPinValue(pin_B1, 0);
+	setPinValue(pin_B2, 1);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::turnright(){
-	setPinValue(mPinA1, 1);
-	setPinValue(mPinA2, 0);
-	setPinValue(mPinB1, 1);
-	setPinValue(mPinB2, 0);
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
+	
+	setPinValue(pin_A1, 1);
+	setPinValue(pin_A2, 0);
+	setPinValue(pin_B1, 1);
+	setPinValue(pin_B2, 0);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::forward(){
-	setPinValue(mPinA1, 1);
-	setPinValue(mPinA2, 0);
-	setPinValue(mPinB1, 0);
-	setPinValue(mPinB2, 1);
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
+	
+	setPinValue(pin_A1, 1);
+	setPinValue(pin_A2, 0);
+	setPinValue(pin_B1, 0);
+	setPinValue(pin_B2, 1);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::backward(){
-	setPinValue(mPinA1, 0);
-	setPinValue(mPinA2, 1);
-	setPinValue(mPinB1, 1);
-	setPinValue(mPinB2, 0);
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
+	
+	setPinValue(pin_A1, 0);
+	setPinValue(pin_A2, 1);
+	setPinValue(pin_B1, 1);
+	setPinValue(pin_B2, 0);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::stop(){
-	setPinValue(mPinA1, 0);
-	setPinValue(mPinA2, 0);
-	setPinValue(mPinB1, 0);
-	setPinValue(mPinB2, 0);
+	int pin_A1 = m_pSett->drivers_PIN_A1();
+	int pin_A2 = m_pSett->drivers_PIN_A2();
+	int pin_B1 = m_pSett->drivers_PIN_B1();
+	int pin_B2 = m_pSett->drivers_PIN_B2();
+	
+	setPinValue(pin_A1, 0);
+	setPinValue(pin_A2, 0);
+	setPinValue(pin_B1, 0);
+	setPinValue(pin_B2, 0);
 }
 
 // ---------------------------------------------------------------------
 
 void WebSocketServer::check_lets(){
 	int pin_let_in = m_pSett->let_PIN_IN();
-	int pin_let_servo = m_pSett->let_PIN_IN();
+	int pin_let_in_enable = m_pSett->let_PIN_ENABLE();
+	int pin_let_servo = m_pSett->let_PIN_SERVO();
 	int let0_pos = m_pSett->let0_POS_SERVO();
 	int let1_pos = m_pSett->let1_POS_SERVO();
 	int let2_pos = m_pSett->let2_POS_SERVO();
@@ -233,18 +258,38 @@ void WebSocketServer::check_lets(){
  	exportPin(pin_let_in);
 	directionInPin(pin_let_in);
 
+	unexportPin(pin_let_in_enable);
+ 	exportPin(pin_let_in_enable);
+	directionOutPin(pin_let_in_enable);
+	
 	unexportPin(pin_let_servo);
  	exportPin(pin_let_servo);
 	directionOutPin(pin_let_servo);
 
+	setPinValue(pin_let_in_enable,1);
 	pwmPin(pin_let_servo, let0_pos);
 	m_bLet0 = getPinValue(pin_let_in) == 0;
+	setPinValue(pin_let_in_enable,0);
+	
+	QThread::usleep(200000);
+	
+	setPinValue(pin_let_in_enable,1);
 	pwmPin(pin_let_servo, let1_pos);
 	m_bLet1 = getPinValue(pin_let_in) == 0;
+	setPinValue(pin_let_in_enable,0);
+	
+	QThread::usleep(200000);
+	
+	setPinValue(pin_let_in_enable,1);
 	pwmPin(pin_let_servo, let2_pos);
 	m_bLet2 = getPinValue(pin_let_in) == 0;
+	setPinValue(pin_let_in_enable,0);
+
+	// moto middle position
+	pwmPin(pin_let_servo, let1_pos);
 
 	unexportPin(pin_let_in);
+	unexportPin(pin_let_in_enable);
 	unexportPin(pin_let_servo);
 
 }
@@ -275,6 +320,7 @@ void WebSocketServer::unexportPin(int pin){
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(pin) << endl;
+		qDebug() << "Unexport pin " << pin;
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for pin " << pin;
 	}
@@ -288,6 +334,7 @@ void WebSocketServer::exportPin(int pin){
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(pin) << endl;
+		qDebug() << "Export pin " << pin;
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for pin " << pin;
 	}
@@ -301,7 +348,7 @@ void WebSocketServer::setPinValue(int pin, int value){
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << QString::number(value) << endl;
-		qDebug() << "Set value " << value << " to " << pin;
+		qDebug() << "Set pin " << pin << " value " << value;
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for set value";
 	}
@@ -315,6 +362,7 @@ void WebSocketServer::directionOutPin(int pin){
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << "out" << endl;
+		qDebug() << "Direction out pin " << pin;
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for out";
 	}
@@ -326,11 +374,12 @@ int WebSocketServer::getPinValue(int pin){
 	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
 	int value = -1;
 	QFile file(gpio_path);
-	if (file.open(QIODevice::ReadWrite)){
+	if (file.open(QIODevice::ReadOnly)){
 		QTextStream stream( &file );
 		stream >> value;
+		qDebug() << "Get pin " << pin << " value " << value;
 	}else{
-		qDebug() << "Could not open gpio/gpioN/value for get value";
+		qDebug() << "Could not open " << gpio_path << " for get value";
 	}
 	return value;
 }
@@ -343,6 +392,7 @@ void WebSocketServer::directionInPin(int pin){
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream stream( &file );
 		stream << "in" << endl;
+		qDebug() << "Direction in pin " << pin;
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for in";
 	}
@@ -354,6 +404,7 @@ void WebSocketServer::pwmPin(int pin, qint64 width_signal_usec){
 	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
 	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
+		qDebug() << "PWM on pin " << pin << " started";
 		QTextStream stream( &file );
 		int counter = 0;
 		QElapsedTimer timer;
@@ -372,6 +423,7 @@ void WebSocketServer::pwmPin(int pin, qint64 width_signal_usec){
 				return;
 			}
 		}
+		qDebug() << "PWM on pin " << pin << " finished";
 	}else{
 		qDebug() << "Could not open " << gpio_path << " for pwm";
 	}

@@ -15,6 +15,7 @@ class Sett {
 		int drivers_PIN_B1();
 		int drivers_PIN_B2();
 		int let_PIN_IN();
+		int let_PIN_ENABLE();
 		int let_PIN_SERVO();
 
 		int drivers_turnleft_A1();
@@ -56,6 +57,7 @@ class Sett {
 		int m_nDrivers_PIN_B1;
 		int m_nDrivers_PIN_B2;
 		int m_nLet_PIN_IN;
+		int m_nLet_PIN_ENABLE;
 		int m_nLet_PIN_SERVO;
 		int m_nLet0_POS_SERVO;
 		int m_nLet1_POS_SERVO;

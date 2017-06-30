@@ -24,7 +24,8 @@ Sett::Sett(){
 	m_nDrivers_PIN_B1 = 22;
 	m_nDrivers_PIN_B2 = 18;
 	m_nLet_PIN_IN = 4;
-	m_nLet_PIN_SERVO = 17;
+	m_nLet_PIN_ENABLE = 17;
+	m_nLet_PIN_SERVO = 24;
 	
 	m_nDrivers_turnleft_A1 = 0;
 	m_nDrivers_turnleft_A2 = 1;
@@ -46,9 +47,9 @@ Sett::Sett(){
 	m_nDrivers_backward_B1 = 1;
 	m_nDrivers_backward_B2 = 0;
 
-	m_nLet0_POS_SERVO = 800;
-	m_nLet1_POS_SERVO = 1200;
-	m_nLet2_POS_SERVO = 1700;
+	m_nLet0_POS_SERVO = 1900;
+	m_nLet1_POS_SERVO = 1500;
+	m_nLet2_POS_SERVO = 1000;
 
 	
 	if(QFile::exists(m_sFilename)){
@@ -138,6 +139,7 @@ bool Sett::load(){
 		m_nDrivers_PIN_B1 = readIntFromSettings(sett, "DRIVERS/PIN_B1", m_nDrivers_PIN_B1);
 		m_nDrivers_PIN_B2 = readIntFromSettings(sett, "DRIVERS/PIN_B2", m_nDrivers_PIN_B2);
 		m_nLet_PIN_IN = readIntFromSettings(sett, "LET/PIN_IN", m_nLet_PIN_IN);
+		m_nLet_PIN_ENABLE = readIntFromSettings(sett, "LET/PIN_ENABLE", m_nLet_PIN_ENABLE);
 		m_nLet_PIN_SERVO = readIntFromSettings(sett, "LET/PIN_SERVO", m_nLet_PIN_SERVO);
 	
 		m_nDrivers_turnleft_A1 = readIntFromSettings(sett, "DRIVERS/turnleft_A1", m_nDrivers_turnleft_A1);
@@ -161,8 +163,8 @@ bool Sett::load(){
 		m_nDrivers_backward_B2 = readIntFromSettings(sett, "DRIVERS/backward_B2", m_nDrivers_backward_B2);
 		
 		m_nLet0_POS_SERVO = readIntFromSettings(sett, "LET/let0_pos_servo", m_nLet0_POS_SERVO);
-		m_nLet1_POS_SERVO = readIntFromSettings(sett, "LET/let1_PIN_SERVO", m_nLet1_POS_SERVO);
-		m_nLet2_POS_SERVO = readIntFromSettings(sett, "LET/let2_PIN_SERVO", m_nLet2_POS_SERVO);
+		m_nLet1_POS_SERVO = readIntFromSettings(sett, "LET/let1_pos_servo", m_nLet1_POS_SERVO);
+		m_nLet2_POS_SERVO = readIntFromSettings(sett, "LET/let2_pos_servo", m_nLet2_POS_SERVO);
 	
 		return true;
 	}
@@ -175,7 +177,7 @@ bool Sett::save(){
 	
 	QSettings sett(m_sFilename, QSettings::IniFormat);
 
-	if(!sett.isWritable()){
+	if(!sett.isWritable()){ // TODO fix if file not exists
 		return false;
 	}
 
@@ -184,6 +186,7 @@ bool Sett::save(){
 	sett.setValue("DRIVERS/PIN_B1", m_nDrivers_PIN_B1);
 	sett.setValue("DRIVERS/PIN_B2", m_nDrivers_PIN_B2);
 	sett.setValue("LET/PIN_IN", m_nLet_PIN_IN);
+	sett.setValue("LET/PIN_ENABLE", m_nLet_PIN_ENABLE);
 	sett.setValue("LET/PIN_SERVO", m_nLet_PIN_SERVO);
 	
 	sett.setValue("DRIVERS/turnleft_A1", m_nDrivers_turnleft_A1);
@@ -206,8 +209,8 @@ bool Sett::save(){
 	sett.setValue("DRIVERS/backward_B1", m_nDrivers_backward_B1);
 	sett.setValue("DRIVERS/backward_B2", m_nDrivers_backward_B2);
 	sett.setValue("LET/let0_pos_servo", m_nLet0_POS_SERVO);
-	sett.setValue("LET/let1_PIN_SERVO", m_nLet1_POS_SERVO);
-	sett.setValue("LET/let2_PIN_SERVO", m_nLet2_POS_SERVO);
+	sett.setValue("LET/let1_pos_servo", m_nLet1_POS_SERVO);
+	sett.setValue("LET/let2_pos_servo", m_nLet2_POS_SERVO);
 
 	return true;
 }
@@ -241,6 +244,12 @@ int Sett::drivers_PIN_B2(){
 
 int Sett::let_PIN_IN(){
 	return m_nLet_PIN_IN;
+};
+
+// ---------------------------------------------------------------------
+
+int Sett::let_PIN_ENABLE(){
+	return m_nLet_PIN_ENABLE;
 };
 
 // ---------------------------------------------------------------------
