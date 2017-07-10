@@ -29,8 +29,8 @@ WebSocketServer::WebSocketServer(QObject *parent) : QObject(parent) {
         create_cmd_handlers(m_mapCmdHandlers);
         m_bServerStarted = true;
     }
-
 	openDriverPins();
+	m_pThreadAuto = NULL;
 }
 
 // ---------------------------------------------------------------------
@@ -182,10 +182,10 @@ void WebSocketServer::turnleft(){
 	int pin_B1 = m_pSett->drivers_PIN_B1();
 	int pin_B2 = m_pSett->drivers_PIN_B2();
 	
-	setPinValue(pin_A1, 1);
-	setPinValue(pin_A2, 0);
-	setPinValue(pin_B1, 0);
-	setPinValue(pin_B2, 1);
+	setPinValue(pin_A1, m_pSett->drivers_turnleft_A1());
+	setPinValue(pin_A2, m_pSett->drivers_turnleft_A2());
+	setPinValue(pin_B1, m_pSett->drivers_turnleft_B1());
+	setPinValue(pin_B2, m_pSett->drivers_turnleft_B2());
 }
 
 // ---------------------------------------------------------------------
@@ -196,10 +196,10 @@ void WebSocketServer::turnright(){
 	int pin_B1 = m_pSett->drivers_PIN_B1();
 	int pin_B2 = m_pSett->drivers_PIN_B2();
 	
-	setPinValue(pin_A1, 1);
-	setPinValue(pin_A2, 0);
-	setPinValue(pin_B1, 1);
-	setPinValue(pin_B2, 0);
+	setPinValue(pin_A1, m_pSett->drivers_turnright_A1());
+	setPinValue(pin_A2, m_pSett->drivers_turnright_A2());
+	setPinValue(pin_B1, m_pSett->drivers_turnright_B1());
+	setPinValue(pin_B2, m_pSett->drivers_turnright_B2());
 }
 
 // ---------------------------------------------------------------------
@@ -210,10 +210,10 @@ void WebSocketServer::forward(){
 	int pin_B1 = m_pSett->drivers_PIN_B1();
 	int pin_B2 = m_pSett->drivers_PIN_B2();
 	
-	setPinValue(pin_A1, 1);
-	setPinValue(pin_A2, 0);
-	setPinValue(pin_B1, 0);
-	setPinValue(pin_B2, 1);
+	setPinValue(pin_A1, m_pSett->drivers_forward_A1());
+	setPinValue(pin_A2, m_pSett->drivers_forward_A2());
+	setPinValue(pin_B1, m_pSett->drivers_forward_B1());
+	setPinValue(pin_B2, m_pSett->drivers_forward_B2());
 }
 
 // ---------------------------------------------------------------------
@@ -224,10 +224,10 @@ void WebSocketServer::backward(){
 	int pin_B1 = m_pSett->drivers_PIN_B1();
 	int pin_B2 = m_pSett->drivers_PIN_B2();
 	
-	setPinValue(pin_A1, 0);
-	setPinValue(pin_A2, 1);
-	setPinValue(pin_B1, 1);
-	setPinValue(pin_B2, 0);
+	setPinValue(pin_A1, m_pSett->drivers_backward_A1());
+	setPinValue(pin_A2, m_pSett->drivers_backward_A2());
+	setPinValue(pin_B1, m_pSett->drivers_backward_B1());
+	setPinValue(pin_B2, m_pSett->drivers_backward_B2());
 }
 
 // ---------------------------------------------------------------------
@@ -242,6 +242,23 @@ void WebSocketServer::stop(){
 	setPinValue(pin_A2, 0);
 	setPinValue(pin_B1, 0);
 	setPinValue(pin_B2, 0);
+}
+
+// ---------------------------------------------------------------------
+
+void WebSocketServer::start_auto(){
+	stop_auto();
+	m_pThreadAuto = new ThreadAuto(this);
+	m_pThreadAuto->start();
+}
+
+// ---------------------------------------------------------------------
+
+void WebSocketServer::stop_auto(){
+	if(m_pThreadAuto != NULL){
+		m_pThreadAuto->terminate();
+		m_pThreadAuto = NULL;
+	}
 }
 
 // ---------------------------------------------------------------------
@@ -404,7 +421,7 @@ void WebSocketServer::pwmPin(int pin, qint64 width_signal_usec){
 	QString gpio_path = "/sys/class/gpio/gpio" + QString::number(pin) + "/value";
 	QFile file(gpio_path);
 	if (file.open(QIODevice::WriteOnly)){
-		qDebug() << "PWM on pin " << pin << " started";
+		qDebug() << "PWM on pin " << pin << " started for " << width_signal_usec;
 		QTextStream stream( &file );
 		int counter = 0;
 		QElapsedTimer timer;

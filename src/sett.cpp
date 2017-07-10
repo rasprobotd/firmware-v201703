@@ -19,10 +19,10 @@ Sett::Sett(){
 	}
 	
 	// default values
-	m_nDrivers_PIN_A1 = 17;
-	m_nDrivers_PIN_A2 = 23;
-	m_nDrivers_PIN_B1 = 22;
-	m_nDrivers_PIN_B2 = 18;
+	m_nDrivers_PIN_A1 = 14;
+	m_nDrivers_PIN_A2 = 15;
+	m_nDrivers_PIN_B1 = 18;
+	m_nDrivers_PIN_B2 = 23;
 	m_nLet_PIN_IN = 4;
 	m_nLet_PIN_ENABLE = 17;
 	m_nLet_PIN_SERVO = 24;
@@ -47,9 +47,9 @@ Sett::Sett(){
 	m_nDrivers_backward_B1 = 1;
 	m_nDrivers_backward_B2 = 0;
 
-	m_nLet0_POS_SERVO = 1900;
-	m_nLet1_POS_SERVO = 1500;
-	m_nLet2_POS_SERVO = 1000;
+	m_nLet0_POS_SERVO = 1800;
+	m_nLet1_POS_SERVO = 1450;
+	m_nLet2_POS_SERVO = 1050;
 
 	
 	if(QFile::exists(m_sFilename)){

@@ -408,6 +408,18 @@ $(document).ready(function(){
 		console.log("[WS] send " + data);
 		window.socket.send(data);
 	});
+	
+	$('#start_autocontrol').unbind().bind('click', function(){
+		var data = JSON.stringify({'cmd':'start_auto'});
+		console.log("[WS] send " + data);
+		window.socket.send(data);
+	});
+	
+	$('#stop_autocontrol').unbind().bind('click', function(){
+		var data = JSON.stringify({'cmd':'stop_auto'});
+		console.log("[WS] send " + data);
+		window.socket.send(data);
+	});
 })
 
 function roboscript_started(){

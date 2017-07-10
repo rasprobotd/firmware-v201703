@@ -11,6 +11,7 @@
 #include "interfaces/icmdhandler.h"
 #include "interfaces/iwebsocketserver.h"
 #include "sett.h"
+#include "thread_auto.h"
 
 // QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 // QT_FORWARD_DECLARE_CLASS(QWebSocket)
@@ -34,6 +35,8 @@ class WebSocketServer : public QObject, public IWebSocketServer {
 		virtual bool let0();
 		virtual bool let1();
 		virtual bool let2();
+		virtual void start_auto();
+		virtual void stop_auto();
 
 		bool isServerStarted();
 
@@ -69,6 +72,8 @@ class WebSocketServer : public QObject, public IWebSocketServer {
 		bool m_bServerStarted;
 		
 		Sett *m_pSett;
+		
+		ThreadAuto *m_pThreadAuto;
 };
 
 #endif //WEBSOCKETSERVER_H
